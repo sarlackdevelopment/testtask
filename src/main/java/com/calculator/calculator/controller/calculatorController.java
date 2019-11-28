@@ -50,10 +50,25 @@ public class calculatorController {
 
     @PutMapping("{name}")
     public Map<String, String> update(@PathVariable String name, @RequestBody Map<String, String> counter) {
+
         Map<String, String> counterFromMemory = getCounterByName(name);
+
+        String value = "";
+        String operation = counter.get("operation");
+
+        if (operation.equals("increment")) {
+            value = String.valueOf(Integer.parseInt(counterFromMemory.get("value")) + 1);
+        } else if (operation.equals("decrement")) {
+            if (Integer.parseInt(counterFromMemory.get("value")) > 0) {
+                value = String.valueOf(Integer.parseInt(counterFromMemory.get("value")) - 1);
+            } else {
+                value = "0";
+            }
+        }
 
         counterFromMemory.putAll(counter);
         counterFromMemory.put("name", name);
+        counterFromMemory.put("value", value);
 
         return counterFromMemory;
     }

@@ -47,7 +47,9 @@ Vue.component('all-quantity-form', {
         getAllQuantity: function() {
             counterApi.get({name: "allQuantity"}).then(
                 result => result.json().then(data => {
-                    this.quantity = data
+                    if (result.ok) {
+                        this.quantity = data
+                    }
                 })
             )
         }
@@ -66,8 +68,8 @@ Vue.component('counter', {
             '<strong>{{counter.name}}</strong> ' +
             '<span>{{counter.value}}</span>' +
         '</div>' +
-        '<button class="btn btn-primary m-1">Увеличить</button>' +
-        '<button class="btn btn-primary m-1">Уменьшить</button>' +
+        '<button class="btn btn-primary m-1" @click="increase">Увеличить</button>' +
+        '<button class="btn btn-primary m-1" @click="decrease">Уменьшить</button>' +
         '<button class="btn btn-danger m-1" @click="deleteCounter">Удалить</button>' +
     '</div>',
     methods: {
@@ -77,6 +79,20 @@ Vue.component('counter', {
                     this.counters.splice(this.counters.indexOf(this.counter), 1)
                 }
             })
+        },
+        increase: function(event) {
+            counterApi.update({name: this.counter.name}, {operation: 'increment'}).then(result => {
+                if (result.ok) {
+                    this.counter.value++
+                }
+            })
+        },
+        decrease: function() {
+            counterApi.update({name: this.counter.name}, {operation: 'decrement'}).then(result => {
+                if ((result.ok) && (this.counter.value > 0)) {
+                    this.counter.value--
+                }
+             })
         }
     }
 })
