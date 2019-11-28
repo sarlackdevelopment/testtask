@@ -13,9 +13,9 @@ Vue.component('counter-form', {
         '<div class="form-group">' +
             '<label for="counterName">Имя счетчика</label>' +
             '<input type="text" class="form-control" id="counterName" aria-describedby="counterNameHelp" placeholder="Имя счетчика" v-model="name">' +
-          '</div>' +
-          '<button class="btn btn-primary" @click="save">Сохранить</button>' +
-          '<hr>' +
+         '</div>' +
+         '<button class="btn btn-primary" @click="save">Сохранить</button>' +
+         '<hr>' +
     '</div>',
     methods: {
         save: function() {
@@ -26,6 +26,28 @@ Vue.component('counter-form', {
                         this.counters.push(data)
                         this.name = ''
                     }
+                })
+            )
+        }
+    }
+})
+
+Vue.component('all-quantity-form', {
+    props: ['quantity'],
+    template: '<div class="container">' +
+        '<h4 class="text-center">Получить суммарное значение всех счетчиков</h4>' +
+        '<div class="d-flex">' +
+            '<button class="btn btn-primary" @click="getAllQuantity">Получить</button>' +
+            '<strong class="mx-5">Общее количество:</strong>' +
+            '<i>{{quantity}}</i>' +
+        '</div>' +
+        '<hr>' +
+    '</div>',
+    methods: {
+        getAllQuantity: function() {
+            counterApi.get({name: "allQuantity"}).then(
+                result => result.json().then(data => {
+                    this.quantity = data
                 })
             )
         }
@@ -63,6 +85,7 @@ Vue.component('counters-list', {
     props: ['counters'],
     template: '<div class="container">' +
         '<counter-form :counters="counters" />' +
+        '<all-quantity-form />' +
         '<h4 class="text-center">Счетчики</h4>' +
         '<counter v-for="counter in counters" :counter="counter" :counters="counters" />' +
     '</div>',

@@ -28,6 +28,13 @@ public class calculatorController {
         return getCounterByName(name);
     }
 
+    @GetMapping("/allQuantity")
+    public String getAllQuantity() {
+        return counters.stream()
+                .map(item -> Integer.parseInt(item.get("value")))
+                .reduce((acc, current) -> acc + current).get().toString();
+    }
+
     @PostMapping
     public Map<String, String> create(@RequestBody Map<String, String> counter) {
 
