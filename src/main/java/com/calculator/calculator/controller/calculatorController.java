@@ -13,9 +13,9 @@ import java.util.Map;
 public class calculatorController {
 
     private List<Map<String, String>> counters = new ArrayList<Map<String, String>>() {{
-        add(new HashMap<String , String>() {{ put("name", "counter1"); put("value", "1"); }} );
-        add(new HashMap<String , String>() {{ put("name", "counter2"); put("value", "1"); }} );
-        add(new HashMap<String , String>() {{ put("name", "counter3"); put("value", "1"); }} );
+        add(new HashMap<String , String>() {{ put("name", "counter1"); put("value", "8"); }} );
+        add(new HashMap<String , String>() {{ put("name", "counter2"); put("value", "8"); }} );
+        add(new HashMap<String , String>() {{ put("name", "counter3"); put("value", "8"); }} );
     }};
 
     @GetMapping
@@ -30,9 +30,13 @@ public class calculatorController {
 
     @PostMapping
     public Map<String, String> create(@RequestBody Map<String, String> counter) {
-        counter.put("name", "counter" + (counters.size() + 1));
 
-        counters.add(counter);
+        String nameCounter = counter.get("name");
+
+        if (!nameCounter.equals("") && nameCounter != null) {
+            counter.put("name", nameCounter);
+            counters.add(counter);
+        }
 
         return counter;
     }
@@ -49,6 +53,7 @@ public class calculatorController {
 
     @DeleteMapping("{name}")
     public void delete(@PathVariable String name) {
+
         Map<String, String> counter = getCounterByName(name);
 
         counters.remove(counter);
